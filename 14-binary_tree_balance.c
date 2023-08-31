@@ -7,8 +7,33 @@
 int binary_tree_balance(const binary_tree_t *tree)
 {
 	if (tree == NULL)
+		return (0);
+	return (binary_tree_height2(tree->left) - binary_tree_height2(tree->right));
+}
+/**
+* binary_tree_height2 - a function that mesures the hight of a binary tree
+* @tree: points to the root of the binary  tree
+* Return: the height of a node or 0 on failure
+*/
+size_t binary_tree_height2(const binary_tree_t *tree)
+{
+	if (tree == NULL)
 		return (-1);
 	if (tree->left == NULL && tree->right == NULL)
 		return (0);
-	return (binary_tree_balance(tree->left) - binary_tree_balance(tree->right));
+	return (big(binary_tree_height2(tree->left),
+				binary_tree_height2(tree->right)) + 1);
+}
+/**
+* big - return the biggest value
+* @value1: is the first value
+* @value2: is the second value
+* Return: the biggest value
+*/
+size_t big(size_t value1, size_t value2)
+{
+	if (value1 > value2)
+		return (value1);
+	else
+		return (value2);
 }
