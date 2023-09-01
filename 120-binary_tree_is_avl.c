@@ -1,19 +1,6 @@
 #include "binary_trees.h"
 
 /**
- * binary_tree_is_avl - checks if binary tree is valid AVL Tree
- * @tree: Pointer to root node of tree to check
- *
- * Return: Returns 1 if tree is valid AVL Tree otherwise returns  0
- */
-int binary_tree_is_avl(const binary_tree_t *tree)
-{
-	if (tree == NULL)
-		return (0);
-	return (b_avl(tree, INT_MIN, INT_MAX));
-}
-
-/**
  * bt_balance - the factor calculate
  *
  * @tree: Pointer to root
@@ -77,4 +64,17 @@ int b_t_l(const binary_tree_t *tree)
 		return (h_lft + 1);
 	else
 		return (h_rgt + 1);
+}
+
+/**
+ * binary_tree_is_avl - checks if binary tree is valid AVL Tree
+ * @tree: Pointer to root node of tree to check
+ *
+ * Return: Returns 1 if tree is valid AVL Tree otherwise returns  0
+ */
+int binary_tree_is_avl(const binary_tree_t *tree)
+{
+	if (tree == NULL)
+		return (0);
+	return (b_avl(tree, INT_MIN, INT_MAX));
 }
