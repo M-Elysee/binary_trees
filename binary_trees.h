@@ -107,11 +107,5 @@ heap_t *head_swap(heap_t *head, heap_t *node);
 heap_t *perclate_down(heap_t *node);
 int heap_extract(heap_t **root);
 
-size_t bt_size(const binary_tree_t *tree);
-int tree_is_complete(const binary_tree_t *tree, int i, int cnodes);
-int bt_is_complete(const binary_tree_t *tree);
-int parent_check(const binary_tree_t *tree);
-int binary_tree_is_heap(const binary_tree_t *tree);
-
 
 #endif
