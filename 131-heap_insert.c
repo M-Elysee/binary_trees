@@ -1,6 +1,22 @@
 #include "binary_trees.h"
 
 /**
+ * heap_rebal - heap rebalancer
+ * @new: Pointer to new node
+ * @parent: Pointer to new parent
+ * Return: Returns parent
+ */
+heap_t *heap_rebal(heap_t *new, heap_t *parent)
+{
+	int n_temp;
+
+	n_temp = new->n;
+	new->n = parent->n;
+	parent->n = n_temp;
+	return (parent);
+}
+
+/**
  * heap_insert - heap inserter
  *
  * @tree: Double pointer to root
@@ -45,22 +61,6 @@ heap_t *heap_insert(heap_t **tree, int value)
 	}
 
 	return (new_n);
-}
-
-/**
- * heap_rebal - heap rebalancer
- * @new: Pointer to new node
- * @parent: Pointer to new parent
- * Return: Returns parent
- */
-heap_t *heap_rebal(heap_t *new, heap_t *parent)
-{
-	int n_temp;
-
-	n_temp = new->n;
-	new->n = parent->n;
-	parent->n = n_temp;
-	return (parent);
 }
 
 /**
