@@ -10,28 +10,20 @@ int binary_tree_is_heap(const binary_tree_t *tree)
 	int bal_val;
 
 	if (tree == NULL)
-	{
 		return (0);
-	}
 	if (tree->left && tree->left->n > tree->n)
 		return (0);
 	if (tree->right && tree->right->n > tree->n)
-	{
 		return (0);
-	}
 	if (bt_is_perfect(tree))
 		return (1);
 	bal_val = bt_balance(tree);
 	if (bal_val == 0)
-	{
 		return (bt_is_perfect(tree->left)
 			&& binary_tree_is_heap(tree->right));
-	}
 	if (bal_val == 1)
-	{
 		return (binary_tree_is_heap(tree->left)
 			&& bt_is_perfect(tree->right));
-	}
 	else
 		return (0);
 }

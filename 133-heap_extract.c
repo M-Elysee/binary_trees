@@ -165,8 +165,7 @@ int heap_extract(heap_t **root)
 	if (!root || !*root)
 		return (0);
 	SET_NODE_BLOC;
-	if (size == 1)
-	{
+	if (size == 1) {
 		FREE_NODE_BLOC;
 		return (res);
 	}
@@ -179,13 +178,11 @@ int heap_extract(heap_t **root)
 		y = binary[x];
 		if (x == strlen(binary) - 1)
 		{
-			if (y == '1')
-			{
+			if (y == '1'){
 				tmp = tmp->right;
 				break;
 			}
-			else if (y == '0')
-			{
+			else if (y == '0'){
 				tmp = tmp->left;
 				break;
 			}
