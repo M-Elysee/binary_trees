@@ -1,61 +1,131 @@
 #include "binary_trees.h"
 
+levelorder_queue_t *create_node(binary_tree_t *node);
+int binary_tree_is_complete(const binary_tree_t *tree);
+void push(binary_tree_t *node, levelorder_queue_t *head,
+		  levelorder_queue_t **tail);
+void free_queue(levelorder_queue_t *head);
+void pop(levelorder_queue_t **head);
 
 /**
- * binary_tree_is_complete - check for bt complete
- * @tree: Pointer to root
+ * pop - Pops head of a levelorder_queue_t queue.
+ * @head: Double pointer to the head of queue.
+ */
+void pop(levelorder_queue_t **head)
+{
+	levelorder_queue_t *tm;
+
+	tm = (*head)->next;
+	free(*head);
+	*head = tm;
+}
+
+/**
+ * binary_tree_is_complete - Checks if a binary tree is complete.
+ * @tree: Pointer to the root node of the tree to traverse.
  *
- * Return: 1 if
+ * Return: Returns Null if  tree is NULL or not complete, 0.
+ *         Otherwise 1.
  */
 int binary_tree_is_complete(const binary_tree_t *tree)
 {
-	binary_tree_t *root;
-	int nd;
+	levelorder_queue_t *hd, *tl;
+	unsigned char flag = 0;
 
-	if (!tree)
+	if (tree == NULL)
 		return (0);
 
-	root = (binary_tree_t *)tree;
-	nd = count_nodes(root);
+	hd = tl = create_node((binary_tree_t *)tree);
+	if (hd == NULL)
+		exit(1);
 
-	return (is_complete(root, 0, nd));
+	while (hd != NULL)
+	{
+		if (hd->node->left != NULL)
+		{
+			if (flag == 1)
+			{
+				free_queue(hd);
+				return (0);
+			}
+			push(hd->node->left, hd, &tl);
+		}
+		else
+			flag = 1;
+		if (hd->node->right != NULL)
+		{
+			if (flag == 1)
+			{
+				free_queue(hd);
+				return (0);
+			}
+			push(hd->node->right, hd, &tl);
+		}
+		else
+			flag = 1;
+		pop(&hd);
+	}
+	return (1);
+}
+
+
+/**
+ * push - Pushes a node to back of a levelorder_queue_t queue.
+ * @node: Binary tree node to print and push.
+ * @head: Double pointer to  head of queue.
+ * @tail: Double pointer to tail of queue.
+ *
+ * Return: Upon malloc failure, exits with a status code of 1.
+ */
+void push(binary_tree_t *node, levelorder_queue_t *head,
+		  levelorder_queue_t **tail)
+{
+	levelorder_queue_t *n_node;
+
+	n_node = create_node(node);
+	if (n_node == NULL)
+	{
+		free_queue(head);
+		exit(1);
+	}
+	(*tail)->next = n_node;
+	*tail = n_node;
+}
+
+
+/**
+ * create_node - Creates new node.
+ * @node: Binary tree node for  new node to contain.
+ *
+ * Return: returns null if error occurs.
+ *         Otherwise returns  pointer to new node.
+ */
+levelorder_queue_t *create_node(binary_tree_t *node)
+{
+	levelorder_queue_t *n_node;
+
+	n_node = malloc(sizeof(levelorder_queue_t));
+	if (n_node == NULL)
+		return (NULL);
+
+	n_node->node = node;
+	n_node->next = NULL;
+
+	return (n_node);
 }
 
 /**
- * count_intnodes - Counts ths inside tree
- * @root: node
- *
- * Return: Number of nodes
+ * free_queue - Frees a levelorder_queue_t queue.
+ * @head: Pointer to head of the queue.
  */
-int count_intnodes(binary_tree_t *root)
+void free_queue(levelorder_queue_t *head)
 {
-	if (!root)
-		return (0);
+	levelorder_queue_t *tm;
 
-	return (1 + count_nodes(root->left) + count_nodes(root->right));
-}
-
-/**
- * is_complete - Check if tree is complete
- * @root: Pointer to tree's root
- * @index: Index of node been evaluated
- * @n: number of trees nodes
- *
- * Return: Returns 1 if tree is a heap, otherwise returns 0
- */
-int is_itcomplete(binary_tree_t *root, int ind, int nd)
-{
-	if (!root)
-		return (0);
-	if (ind >= nd)
-		return (0);
-	if (!root->left && !root->right)
-		return (1);
-	if (root->right && !root->left)
-		return (0);
-	if (root->left && !root->right)
-		return (is_complete(root->left, ind * 2 + 1, nd));
-
-	return (is_complete(root->left, ind * 2 + 1, nd) &&
-			is_complete(root->right, ind * 2 + 2, nd));
+	while (head != NULL)
+	{
+		tm = head->next;
+		free(head);
+		head = tm;
+	}
 }
