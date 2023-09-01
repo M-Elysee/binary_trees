@@ -64,7 +64,7 @@ heap_t *heap_insert(heap_t **tree, int value)
 }
 
 /**
- * bts - measure tree
+ * b_t_s - measure tree
  *
  * @tree: Pointer to root
  * Return: Returns size, otherwise returns 0

@@ -18,7 +18,7 @@ void binary_tree_levelorder(const binary_tree_t *tree, void (*func)(int))
 * display - traverse levels by level in a binary tree
 * @tree: points to the root of the tree
 * @level: is the level to be accessed
-* @fun: is the function tobe call on every node accessed
+* @func: is the function tobe call on every node accessed
 */
 void display(const binary_tree_t *tree, size_t level, void (*func)(int))
 {

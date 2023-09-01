@@ -56,12 +56,10 @@ int remove_type(bst_t *root)
 
 		free(root);
 		return (0);
-	} else
-	{
-		n_val = successor(root->right);
-		root->n = n_val;
-		return (n_val);
 	}
+	n_val = successor(root->right);
+	root->n = n_val;
+	return (n_val);
 }
 
 /**
@@ -75,14 +73,10 @@ int node_successor(bst_t *node)
 
 	if (node == NULL)
 		return (0);
-	else
-	{
-		lft = node_successor(node->left);
-		if (lft == 0)
-			return (node->n);
-		return (lft);
-	}
-
+	lft = node_successor(node->left);
+	if (lft == 0)
+		return (node->n);
+	return (lft);
 }
 
 /**

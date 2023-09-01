@@ -88,13 +88,10 @@ int bt_is_perfect(const binary_tree_t *tree)
 
 	if (tree == NULL)
 		return (0);
-	else
-	{
-		res = tree_perfect(tree);
-		if (res != 0)
-			return (1);
-		return (0);
-	}
+	res = tree_perfect(tree);
+	if (res != 0)
+		return (1);
+	return (0);
 }
 
 /**
