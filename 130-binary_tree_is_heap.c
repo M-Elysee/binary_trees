@@ -48,9 +48,8 @@ int check_b_heap(const binary_tree_t *tree, int index,
 {
 	if (!tree)
 		return (1);
-	if (index > max_index || tree->n > max_val){
+	if (index > max_index || tree->n > max_val)
 		return (0);
-	}
 	return (check_b_heap(tree->left, 2 * index + 1, max_index, tree->n) &&
 			check_b_heap(tree->right, 2 * index + 2, max_index, tree->n));
 }

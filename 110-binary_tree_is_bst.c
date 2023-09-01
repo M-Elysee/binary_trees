@@ -50,7 +50,8 @@ int less_thn(const binary_tree_t *tree, int val)
  * binary_tree_is_bst - checks if a binary tree is a valid binary search tree
  * @tree: Pointer to root node of the tree to check
  *
- * Return: Returns 1 if tree is a valid BST, Othewise returns  0.If tree is NULL, return 0
+ * Return: Returns 1 if tree is a valid BST, Othewise returns  0
+ * If tree is NULL
  */
 int binary_tree_is_bst(const binary_tree_t *tree)
 {

@@ -1,197 +1,98 @@
-#include "binary_trees.h"
 #include <stdlib.h>
+#include "binary_trees.h"
 
-#define CONV "0123456789ABCDEF"
-
-#define INITIALIZE_NODE {0, NULL, NULL, NULL}
-
-
-#define FREE_NODE_BLOC { \
-		res = tmp->n; \
-		free(tmp); \
-		*root = NULL; \
-	}
-
-#define SET_NODE_BLOC { \
-	tmp = *root; \
-	size = binary_tree_size(*root); \
-	binary = &buffer[49]; \
-	*binary = 0; \
-	}
-
-#define CONVT_LOOP { \
-		*--binary = CONV[size % 2]; \
-		size /= 2; \
-	}
-
-#define head_swap_bloc { \
-		head = *root; \
-		head = head_swap(head, tmp); \
-		res = head->n; \
-		free(head); \
-		*root = tmp; \
-		tmp = perclate_down(tmp); \
-		*root = tmp; \
-	}
+size_t get_count_node(const binary_tree_t *tree);
+heap_t *ast_node(heap_t *root, size_t index, size_t size);
+void td_heapify(heap_t *root);
 
 /**
- * swap - swaps two nodes in binary tree
- * @a: The first node
- * @b: The second node
- * Return: Returns pointer to root
- */
-bst_t *swap(bst_t *a, bst_t *b)
-{
-	bst_t a_cp = INITIALIZE_NODE;
-
-	a_cp.n = a->n;
-	a_cp.parent = a->parent;
-	a_cp.left = a->left;
-	a_cp.right = a->right;
-	a->parent = b;
-	a->left = b->left;
-	a->right = b->right;
-	if (b->left) {
-		b->left->parent = a;
-    }
-    if (b->right) {
-		b->right->parent = a;
-    }
-    b->parent = a_cp.parent;
-	if (a_cp.parent)
-	{
-		if (a == a_cp.parent->left)
-			a_cp.parent->left = b;
-		else
-			a_cp.parent->right = b;
-	}
-	if (b == a_cp.left)
-	{
-		b->left = a;
-		b->right = a_cp.right;
-		if (a_cp.right)
-			a_cp.right->parent = b;
-	}
-	else if (b == a_cp.right)
-	{
-		b->right = a;
-		b->left = a_cp.left;
-		if (a_cp.left)
-			a_cp.left->parent = b;
-	}
-	while (b->parent) {
-		b = b->parent;
-    }
-    return (b);
-}
-
-/**
- * binary_tree_size - measures size of binary tree
- * @tree: input binary tree
- * Return: Returns number of descendant child nodes
- */
-size_t binary_tree_size(const binary_tree_t *tree)
-{
-	if (!tree)
-		return(0);
-
-	return(1 + binary_tree_size(tree->left) + binary_tree_size(tree->right));
-}
-
-/**
- * head_swap - helper function to swap head and node
- * @head: Pointer to head
- * @node: pointer to node
- * Return: Returns pointer to severed head of tree
- */
-heap_t *head_swap(heap_t *head, heap_t *node)
-{
-	if (node->parent->left == node) {
-		node->parent->left = NULL;
-	} else {
-		node->parent->right = NULL;
-    }
-	node->parent = NULL;
-	node->left = head->left;
-	node->right = head->right;
-	if (head->left)
-		head->left->parent = node;
-	if (head->right)
-		head->right->parent = node;
-	return (head);
-}
-
-/**
- * perclate_down - percolate head into correct position
- * @node: Pointer to head
- * Return: Returns pointer to head of tree
- */
-heap_t *perclate_down(heap_t *node)
-{
-	heap_t *nxt = node;
-	int maximum;
-
-	if (!node)
-		return (NULL);
-	maximum = node->n;
-	if (node->left)
-		maximum = MAX(node->left->n, maximum);
-	if (node->right)
-		maximum = MAX(node->right->n, maximum);
-	if (node->left && maximum == node->left->n)
-		nxt = node->left;
-	else if (node->right && maximum == node->right->n)
-		nxt = node->right;
-	if (nxt != node)
-	{
-		swap(node, nxt);
-		perclate_down(node);
-	}
-	return (nxt);
-}
-
-/**
- * heap_extract - extracts root node of Max Binary Heap
- * @root: Double pointer to root of tree
- * Return: Return value stored in root node
+ * heap_extract - Extracts the root node of a Max Binary Heap
+ * @root: Double pointer to the root node of the heap
+ *
+ * Return: Returns value stored in root node otherwise return  0 on failure
  */
 int heap_extract(heap_t **root)
 {
-    int res;
-    char buffer[50], *binary, y;
-	heap_t *head, *tmp;
-	size_t size, x;
+	size_t sze;
+	int val;
+	heap_t *lst = NULL;
 
 	if (!root || !*root)
 		return (0);
-	SET_NODE_BLOC;
-	if (size == 1) {
-		FREE_NODE_BLOC;
-		return (res);
-	}
-	do {
-		CONVT_LOOP;
-	} while (size);
 
-	for (x = 1; x < strlen(binary); x++)
+	val = (*root)->n;
+	sze = get_count_node(*root);
+	lst = ast_node(*root, 0, sze);
+
+	(*root)->n = lst->n;
+
+	if (lst->parent)
 	{
-		y = binary[x];
-		if (x == strlen(binary) - 1)
-		{
-			if (y == '1'){
-				tmp = tmp->right;
-				break;
-			}
-			else if (y == '0'){
-				tmp = tmp->left;
-				break;
-			}
-		}
-		if (y == '1')
-			tmp = tmp->right;
-		else if (y == '0')
-			tmp = tmp->left;
+		if (lst->parent->left == lst)
+			lst->parent->left = NULL;
+		else
+			lst->parent->right = NULL;
 	}
-	head_swap_bloc;
-	return (res);
+	else
+		*root = NULL;
+	free(lst);
+	td_heapify(*root);
+	return (val);
+}
+
+/**
+ * get_count_node - counts total number of nodes in binary tree
+ * @tree: Pointer to root node of tree to count number of nodes
+ * Return: Returns number of nodes in tree
+ */
+size_t get_count_node(const heap_t *tree)
+{
+	if (!tree)
+		return (0);
+	return (1 + get_count_node(tree->left) + get_count_node(tree->right));
+}
+
+/**
+ * ast_node - Gets last node of a Max Binary Heap
+ * @root: Pointer to root node of Heap
+ * @index: Index of current node in binary representation of size
+ * @size: Size of Heap
+ *
+ * Return: Return pointer to last node of Heap
+ */
+heap_t *ast_node(heap_t *root, size_t index, size_t size)
+{
+	heap_t *nd = root;
+
+	if (!root || index >= size)
+		return (NULL);
+	if (index == size - 1)
+		return (nd);
+	nd = ast_node(root->left, 2 * index + 1, size);
+	if (nd)
+		return (nd);
+	return (ast_node(root->right, 2 * index + 2, size));
+}
+
+/**
+ * td_heapify - Moves node at top of tree down
+ * @root: Pointer to root node of Heap
+ * Return: Returns void
+ */
+void td_heapify(heap_t *root)
+{
+	heap_t *lrgst = root, *curr = NULL;
+	int tmp;
+
+	while (lrgst != curr)
+	{
+		curr = lrgst;
+		if (curr->left && curr->left->n > curr->n)
+			lrgst = curr->left;
+		if (curr->right && curr->right->n > lrgst->n)
+			lrgst = curr->right;
+		tmp = curr->n;
+		curr->n = lrgst->n;
+		lrgst->n = tmp;
+	}
 }
