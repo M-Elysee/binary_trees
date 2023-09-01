@@ -14,9 +14,8 @@ int binary_tree_is_heap(const binary_tree_t *tree)
 {
 	int nd;
 
-	if (!tree) {
+	if (!tree)
 		return (0);
-	}
 	nd = get_nodes_total(tree);
 	return (check_b_heap(tree, 0, nd - 1, tree->n));
 }
@@ -47,9 +46,8 @@ int get_nodes_total(const binary_tree_t *tree)
 int check_b_heap(const binary_tree_t *tree, int index,
 			  int max_index, int max_val)
 {
-	if (!tree) {
+	if (!tree)
 		return (1);
-	}
 	if (index > max_index || tree->n > max_val){
 		return (0);
 	}
