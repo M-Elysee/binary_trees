@@ -91,7 +91,7 @@ int bt_balance(const binary_tree_t *tree);
 int bt_is_perfect(const binary_tree_t *tree);
 size_t bt_height(const binary_tree_t *tree);
 int binary_tree_is_heap(const binary_tree_t *tree);
-heap_t *heap_rebal(heap_t *new, heap_t *parent);
+// heap_t *heap_rebal(heap_t *new, heap_t *parent);
 size_t b_t_s(const binary_tree_t *tree);
 heap_t *heap_nfind(heap_t *root, size_t number);
 heap_t *heap_insert(heap_t **tree, int value);
