@@ -1,123 +1,100 @@
 #include "binary_trees.h"
 
 /**
- * bt_height - Function that measures height of binary tree
- * @tree: Tree to go through
- * Return: Returns height
- */
-size_t bt_height(const binary_tree_t *tree)
-{
-	size_t lft = 0;
-	size_t rght = 0;
-
-	if (tree == NULL)
-	{
-		return (0);
-	}
-	else
-	{
-		if (tree->left == NULL && tree->right == NULL)
-			return (tree->parent != NULL);
-		if (tree)
-		{
-			lft = tree->left ? 1 + bt_height(tree->left) : 0;
-			rght = tree->right ? 1 + bt_height(tree->right) : 0;
-		}
-		return ((lft > rght) ? lft : rght);
-	}
-}
-
-/**
- * bt_balance - measures balance factor of binary tree
- * @tree: Tree to go through
- * Return: returns balanced factor
- */
-int bt_balance(const binary_tree_t *tree)
-{
-	int rght = 0, lft = 0, ttl = 0;
-
-	if (tree)
-	{
-		lft = ((int)bt_height(tree->left));
-		rght = ((int)bt_height(tree->right));
-		ttl = lft - rght;
-	}
-	return (ttl);
-}
-
-/**
- * tree_is_perfect - function that checks if tree is perfect or not
- * @tree: Tree to check
- * Return: Returns 0 if ot a perfect or returns other number that is level of height
- */
-int tree_is_perfect(const binary_tree_t *tree)
-{
-	int lft = 0, rght = 0;
-
-	if (tree->left && tree->right)
-	{
-		lft = 1 + tree_is_perfect(tree->left);
-		rght = 1 + tree_is_perfect(tree->right);
-		if (rght == lft && rght != 0 && lft != 0)
-			return (rght);
-		return (0);
-	}
-	else if (!tree->left && !tree->right)
-		return (1);
-	else
-		return (0);
-}
-
-/**
- * bt_is_perfect - perfect or not tree
- * @tree: Tree to check
- * Return: Returns 1 otherwise returns 0
- */
-int bt_is_perfect(const binary_tree_t *tree)
-{
-	int res = 0;
-
-	if (tree == NULL) {
-		return (0);
-	}
-	else
-	{
-		res = tree_is_perfect(tree);
-		if (res != 0){
-			return (1);
-		}
-		return (0);
-	}
-}
-
-/**
- * binary_tree_is_heap - checks if binary tree is valid Max Binary Heap
- * @tree: Tree to check
- * Return: Returns 1 otherwise returns  0
+ * binary_tree_is_heap - checks if a binary tree is a valid Max Binary Heap
+ * @tree: a pointer to the root node of the tree to check
+ *
+ * Return: 1 if tree is a valid Max Binary Heap
+ *         0 if tree is NULL
+ *         0 otherwise
  */
 int binary_tree_is_heap(const binary_tree_t *tree)
 {
-	int bal_val;
+	if (!tree)
+		return (0);
+	return (btih_h(tree));
+}
 
-	if (tree == NULL) {
-		return (0);
-	}
-	if (tree->left && tree->left->n > tree->n) {
-		return (0);
-	}
-	if (tree->right && tree->right->n > tree->n) {
-		return (0);
-	}
-	if (bt_is_perfect(tree)) {
+/**
+ * btih_h - checks if a binary tree is a valid Max Binary Heap
+ * @tree: a pointer to the root node of the tree to check
+ *
+ * Return: 1 if tree is a valid Max Binary Heap
+ *         1 if tree is NULL
+ *         0 otherwise
+ */
+int btih_h(const binary_tree_t *tree)
+{
+	if (!tree)
 		return (1);
-	}
-	bal_val = bt_balance(tree);
-	if (bal_val == 0) {
-		return (bt_is_perfect(tree->left) && binary_tree_is_heap(tree->right));
-	}
-	if (bal_val == 1) {
-		return (binary_tree_is_heap(tree->left) && bt_is_perfect(tree->right));
-	} else {
+
+	if (!bt_is_complete(tree))
 		return (0);
-	}
+
+	if (tree->left)
+		if (tree->left->n > tree->n)
+			return (0);
+	if (tree->right)
+		if (tree->right->n > tree->n)
+			return (0);
+
+	return (btih_h(tree->left) &&
+		btih_h(tree->right));
+}
+
+/**
+ * bt_is_complete - checks if a binary tree is complete
+ * @tree: a pointer to the root node of the tree to check
+ *
+ * Return: 1 if the tree is complete
+ *         0 if the tree is not complete
+ *         0 if tree is NULL
+ */
+int bt_is_complete(const binary_tree_t *tree)
+{
+	size_t size;
+
+	if (!tree)
+		return (0);
+	size = bt_size(tree);
+
+	return (btic_h(tree, 0, size));
+}
+
+/**
+ * btic_h - checks if a binary tree is complete
+ * @tree: a pointer to the root node of the tree to check
+ * @index: node index to check
+ * @size: number of nodes in the tree
+ *
+ * Return: 1 if the tree is complete
+ *         0 if the tree is not complete
+ *         0 if tree is NULL
+ */
+int btic_h(const binary_tree_t *tree, size_t index, size_t size)
+{
+	if (!tree)
+		return (1);
+
+	if (index >= size)
+		return (0);
+
+	return (btic_h(tree->left, 2 * index + 1, size) &&
+		btic_h(tree->right, 2 * index + 2, size));
+}
+
+/**
+ * bt_size - measures the size of a binary tree
+ * @tree: tree to measure the size of
+ *
+ * Return: size of the tree
+ *         0 if tree is NULL
+ */
+size_t bt_size(const binary_tree_t *tree)
+{
+	if (!tree)
+		return (0);
+
+	return (bt_size(tree->left) +
+		bt_size(tree->right) + 1);
 }
